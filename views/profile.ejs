@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Profile</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<style>
+  .box {
+
+    background-image: linear-gradient(-225deg, #473B7B 0%, #3584A7 51%, #30D2BE 100%);
+  }
+</style>
+
+<body>
+  <div class="w-full min-h-screen box p-8 ">
+    <div class="w-full flex justify-end">
+      <a href="/logout" class="bg-red-500 rounded-md px-4 py-1">Logout</a>
+    </div>
+    <h3 class="text-3xl mb-2 text-white">Hello, <%= user.username %> 👋🏻</h3>
+    <h5 class="mb-2 text-indigo-300">You can create a new post.</h5>
+
+
+    <div class="posts mt-5 w-96">
+      <form action="/post" method="post" enctype="multipart/form-data" class="space-y-1 p-3 rounded-md bg-slate-800 shadow-md mb-4 w-80 h-60">
+        <textarea id="randomText" class="w-full h-28 outline-none resize-none p-2 bg-transparent border-2 text-slate-200 border-zinc-500 rounded-md" name="content" placeholder="What's on your mind?"></textarea>
+        <button type="button" onclick="generateRandomText()" class="mt-4 px-3 mb-0 py-2 bg-blue-500 text-white text-md rounded-md w-full hover:bg-blue-600">Generate Text</button>
+
+        <div class="flex justify-between">
+          <div class="relative">
+            <input type="file" name="image" id="image" class="absolute inset-0 w-full mt-2 h-full opacity-0 cursor-pointer">
+            <label for="image" class="block w-32 mt-3 text-center py-2 bg-teal-900 text-white rounded-md border-2 border-zinc-500 text-sm cursor-pointer">Choose a file</label>
+          </div>
+          <input type="submit" class="block w-32 mt-3 text-center py-2 bg-blue-900 text-white rounded-md border-2 border-zinc-500 text-sm cursor-pointer" value="Create New Post">
+        </div>
+      </form>
+    </div>
+
+
+
+
+
+    <div class="posts mt-5">
+      <h3 class="text-zinc-400">Your Posts</h3>
+      <div class="postcontainer mt-5 flex flex-wrap gap-4 text-white">
+        <% user.posts.reverse().forEach(function(post){ %>
+        <div class="post w-full sm:w-1/2 md:w-1/3 lg:w-1/4 p-4 mb-2 rounded-md border-2 border-zinc-700 bg-slate-900 relative">
+          <img src="http://localhost:3000/uploads/<%= post.image %>" alt="Post Image" class="absolute top-4 right-4 w-20 h-20 object-cover rounded-md">
+          <h4 class="text-blue-500 mb-2">@<%= user.username %></h4>
+          <p class="text-sm tracking-tight break-words"><%= post.content %></p>
+          <small class="mt-2 inline-block"><%= post.likes.length %> likes</small>
+          <div class="btns flex gap-4 mt-1">
+            <a class="text-blue-600" href="/like/<%= post._id %>">
+              <%= post.likes.indexOf(user._id) !== -1 ? "Unlike" : "Like" %>
+            </a>
+            <a class="text-green-300" href="/edit/<%= post._id %>">Edit</a>
+            <a class="text-red-500" href="/delete/<%= post._id %>">Delete</a>
+          </div>
+        </div>
+        <% }) %>
+      </div>
+
+    </div>
+  </div>
+
+  <script>
+    const randomTexts = [
+      "Lorem ipsum dolor sit amet, consectetur ag elit.",
+      "Vivamus lacinia odio vitae vestibulum vestibulum.",
+      "Cras vehicula, mi quis aliquam egestas,auris.",
+      "Praesent ullamcorper dui eget magna aliquet dapibus.",
+      "Fusce tincidunt ex non urna consectetur, fermentum.",
+      "Curabitur nec lacus nec lorem interdum  sl.",
+      "Mauris placerat justo at nisl suscipit, ermentum.",
+      "Etiam non metus euismod, pharetra sapien  sapien.",
+      "Phasellus quis orci nec leo dignissim convallis."
+    ];
+
+    function generateRandomText() {
+      const randomIndex = Math.floor(Math.random() * randomTexts.length);
+      document.getElementById('randomText').innerText = randomTexts[randomIndex];
+    }
+  </script>
+</body>
+
+</html>
